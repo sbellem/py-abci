@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  abci:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app/
+    command: python examples/counter.py
+  tendermint:
+    image: tendermint/tendermint
+    volumes:
+      - ./tmdata:/tendermint
+    entrypoint: ''
+    command: ['tendermint', '--log_level', 'debug', 'node']
+  client:
+    image: appropriate/curl
