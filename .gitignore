@@ -8,4 +8,7 @@ abci.egg-info/
 py_abci.egg-info
 pyabci.egg-info
 build
+
+# tendermint data
 tmdata
+network/*/data

@@ -1,0 +1,96 @@
+version: '3'
+
+services:
+
+  #############################################################################
+  #                                                                           #
+  #                                 NODE 1                                    #
+  #                                                                           #
+  #############################################################################
+  abci-1:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app/
+    command: python examples/counter.py
+  tendermint-1:
+    depends_on:
+      - abci-1
+    image: tendermint/tendermint
+    volumes:
+      - ./network/node1:/tendermint
+    entrypoint: ''
+    command: bash -c "tendermint unsafe_reset_all && tendermint node"
+
+
+  #############################################################################
+  #                                                                           #
+  #                                 NODE 2                                    #
+  #                                                                           #
+  #############################################################################
+  abci-2:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app/
+    command: python examples/counter.py
+  tendermint-2:
+    depends_on:
+      - abci-2
+    image: tendermint/tendermint
+    volumes:
+      - ./network/node2:/tendermint
+    entrypoint: ''
+    command: bash -c "tendermint unsafe_reset_all && tendermint node"
+
+
+  #############################################################################
+  #                                                                           #
+  #                                 NODE 3                                    #
+  #                                                                           #
+  #############################################################################
+  abci-3:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app/
+    command: python examples/counter.py
+  tendermint-3:
+    depends_on:
+      - abci-3
+    image: tendermint/tendermint
+    volumes:
+      - ./network/node3:/tendermint
+    entrypoint: ''
+    command: bash -c "tendermint unsafe_reset_all && tendermint node"
+
+
+  #############################################################################
+  #                                                                           #
+  #                                 NODE 4                                    #
+  #                                                                           #
+  #############################################################################
+  abci-4:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app/
+    command: python examples/counter.py
+  tendermint-4:
+    depends_on:
+      - abci-4
+    image: tendermint/tendermint
+    volumes:
+      - ./network/node4:/tendermint
+    entrypoint: ''
+    command: bash -c "tendermint unsafe_reset_all && tendermint node"
+
+
+  #############################################################################
+  #
+  # client
+  #
+  #############################################################################
+  curl-client:
+    image: appropriate/curl
+    command: /bin/sh -c "curl http://tendermint-1:46657/abci_query && curl http://tendermint-2:46657/abci_query && curl http://tendermint-3:46657/abci_query && curl http://tendermint-4:46657/abci_query"
